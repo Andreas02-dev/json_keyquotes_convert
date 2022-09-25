@@ -129,12 +129,27 @@ fn json_unescape_ctrlchars(json: &str) -> String {
 #[cfg(test)]
 mod tests {
     use std::{path::Path};
-    use crate::{json_convert_with_to_without_keyquotes};
+    use crate::{json_convert_without_to_with_keyquotes, load_json, json_convert_with_to_without_keyquotes};
 
     #[test]
-    fn it_works() {
-        let path = Path::new("./Ldh liederen.json");
+    fn test_json_convert_without_to_with_keyquotes() {
+        let path = Path::new("./tmp_without_keyquotes");
+        std::fs::copy("./test_resources/Test_without_keyquotes.json", "./tmp_without_keyquotes").unwrap();
+        json_convert_without_to_with_keyquotes(path);
+        let converted_file_contents = load_json(path).unwrap();
+        let expected_file_contents = load_json(Path::new("./test_resources/Test_with_keyquotes.json")).unwrap();
+        assert!(converted_file_contents == expected_file_contents);
+        std::fs::remove_file("./tmp_without_keyquotes").unwrap();
+    }
+
+    #[test]
+    fn test_json_convert_with_to_without_keyquotes() {
+        let path = Path::new("./tmp_with_keyquotes");
+        std::fs::copy("./test_resources/Test_with_keyquotes.json", "./tmp_with_keyquotes").unwrap();
         json_convert_with_to_without_keyquotes(path);
-        assert_eq!(4, 4);
+        let converted_file_contents = load_json(path).unwrap();
+        let expected_file_contents = load_json(Path::new("./test_resources/Test_without_keyquotes.json")).unwrap();
+        assert!(converted_file_contents == expected_file_contents);
+        std::fs::remove_file("./tmp_with_keyquotes").unwrap();
     }
 }

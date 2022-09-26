@@ -14,4 +14,4 @@ jobs:
     steps:
       - 
         name: "Publish to Crates.io"
-        run: 'echo "No tests required" '
+        run: 'echo "No publish required" '

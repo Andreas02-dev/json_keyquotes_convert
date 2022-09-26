@@ -1,5 +1,5 @@
 ### Status
-[![CI/CD pipeline](https://github.com/Andreas02-dev/json_keyquotes_convert/actions/workflows/ci_cd.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert/actions/workflows/ci_cd.yml)
+[![Tests](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml)
 
 ### Usage
 

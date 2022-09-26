@@ -3,6 +3,10 @@ name: Crates.io
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'test_resources/**'
+      - 'Cargo.toml'
 
 env:
   CARGO_TERM_COLOR: always

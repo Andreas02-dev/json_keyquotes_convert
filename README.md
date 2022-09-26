@@ -1,5 +1,6 @@
 ### Status
 [![Tests](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml)
+[![Crates.io](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml)
 
 ### Usage
 

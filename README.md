@@ -1,3 +1,6 @@
+### Status
+[![CI/CD pipeline](https://github.com/Andreas02-dev/json_keyquotes_convert/actions/workflows/ci_cd.yml/badge.svg)](https://github.com/Andreas02-dev/json_keyquotes_convert/actions/workflows/ci_cd.yml)
+
 ### Usage
 
 - `json_convert_with_to_without_keyquotes` converts a file from JSON with keyquotes and (\t and \n) escape characters to JSON without keyquotes and (\t and \n) escape characters.

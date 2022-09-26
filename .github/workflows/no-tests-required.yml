@@ -17,4 +17,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: 'echo "No tests required" '
+      - 
+        name: Run tests
+        run: 'echo "No tests required" '

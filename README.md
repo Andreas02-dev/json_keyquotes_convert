@@ -2,6 +2,11 @@
 [![Tests](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml)
 [![Crates.io](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml)
 
+### Crate information
+
+* [Crates.io](https://crates.io/crates/json_keyquotes_convert)
+* [Docs.rs](https://docs.rs/json_keyquotes_convert/)
+
 ### Usage
 
 - `json_convert_with_to_without_keyquotes` converts a file from JSON with keyquotes and (\t and \n) escape characters to JSON without keyquotes and (\t and \n) escape characters.

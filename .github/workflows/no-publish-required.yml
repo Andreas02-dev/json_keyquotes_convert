@@ -1,0 +1,17 @@
+name: Crates.io
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'src/**'
+      - 'test_resources/**'
+      - 'Cargo.toml'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: "Publish to Crates.io"
+        run: 'echo "No tests required" '

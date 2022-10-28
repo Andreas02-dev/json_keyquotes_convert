@@ -1,20 +1,92 @@
-### Status
-[![Tests](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml)
-[![Crates.io](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml)
+### Crate status
+[![crates.io](https://img.shields.io/crates/v/json_keyquotes_convert.svg)](https://crates.io/crates/json_keyquotes_convert)
+[![docs.rs](https://img.shields.io/docsrs/json_keyquotes_convert)](https://docs.rs/json_keyquotes_convert)
+[![License](https://img.shields.io/crates/l/json_keyquotes_convert.svg)](LICENSE)
+### Pipeline status
+[![Test pipeline](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/tests.yml)
+[![Crates.io deployment pipeline](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/Andreas02-dev/json_keyquotes_convert_rs/actions/workflows/publish.yml)
 
-### Crate information
+### Installation
+```
+cargo add json_keyquotes_convert
+```
 
-* [Crates.io](https://crates.io/crates/json_keyquotes_convert)
-* [Docs.rs](https://docs.rs/json_keyquotes_convert/)
+### Example usage
 
-### Usage
+- For more information, look at the [docs](https://docs.rs/json_keyquotes_convert).
 
-- `json_convert_with_to_without_keyquotes` converts a file from JSON with keyquotes and (\t and \n) escape characters to JSON without keyquotes and (\t and \n) escape characters.
-- `json_convert_without_to_with_keyquotes` converts a file from JSON without keyquotes and (\t and \n) escape characters to JSON with keyquotes and (\t and \n) escape characters.
+##### Using the builder pattern (recommended):
+```rust
+use json_keyquotes_convert::{JsonKeyQuoteConverter, Quotes};
 
-### Important
+let json = JsonKeyQuoteConverter::new("{key: \"va\nl\"}", Quotes::default())
+	.add_key_quotes().json_escape_ctrlchars().json();
 
-Please note that this crate does not check whether the output is valid JSON. The functionality of this crate is based on Regular Expressions and uses the [regex](https://crates.io/crates/regex) crate.
+// JSON string will now be: {\"key\": \"va\\nl\"}
+// Raw JSON will now be: {"key": "va\nl"}
+```
+
+##### Using functions:
+```rust
+use json_keyquotes_convert::{json_key_quote_utils, Quotes};
+
+let json_added = json_key_quote_utils::json_add_key_quotes("{key: \"va\nl\"}", Quotes::default());
+let json_escaped = json_key_quote_utils::json_escape_ctrlchars(&json_added);
+
+// JSON string will now be: {\"key\": \"va\\nl\"}
+// Raw JSON will now be: {"key": "va\nl"}
+```
+
+### Important information
+
+#### Crate support legend
+
+|       Great        |         Good        |  Unsupported  |
+| :----------------: | :-----------------: | :-----------: |
+| :heavy_check_mark: |  :white_check_mark: |     :x:       |
+|   Automatically    |     Configurable    |  Unsupported  |
+
+#### Crate support
+** Any unlisted features might be unsupported. **
+  - Adding quotes around JSON keys:
+  	- Double-quotes: :heavy_check_mark: (default)
+	- Single-quotes: :white_check_mark:
+  - Removing quotes around JSON keys:
+	- Double-quotes: :heavy_check_mark:
+	- Single-quotes: :heavy_check_mark:
+  - Supported quotes around JSON string values:
+	- Double-quotes: :heavy_check_mark:
+	- Single-quotes: :heavy_check_mark:
+  - Supports control character escaping in JSON keys:
+	- Newline (\n): :heavy_check_mark: :white_check_mark:
+	- Tab (\t): :heavy_check_mark: :white_check_mark:
+	- Note: These characters could be misinterpreted as not belonging to the key. It is therefore not recommended to start or end a JSON key with these characters.
+  - Supports control character unescaping in JSON keys:
+	- Newline (\n): :heavy_check_mark: :white_check_mark:
+	- Tab (\t): :heavy_check_mark: :white_check_mark:
+	- Note: These characters could be misinterpreted as not belonging to the key. It is therefore not recommended to start or end a JSON key with these characters.
+  - Supports control character escaping in JSON string values:
+	- Newline (\n): :heavy_check_mark: :white_check_mark:
+	- Tab (\t): :heavy_check_mark: :white_check_mark:
+  - Supports control character unescaping in JSON string values:
+	- Newline (\n): :heavy_check_mark: :white_check_mark:
+	- Tab (\t): :heavy_check_mark: :white_check_mark:
+  - Supported :heavy_check_mark: characters in JSON keys:
+	- [A-Z] [a-z] [0-9] \` ~ ! @ # $ % € ^ & * ( ) - _ = + \ | ; " ' . < > / ? \r \n \t \f \v `<U+0020>(Space)`
+	- Note: ' and " and their escaped variants could be misinterpreted as keyquotes when used as the last character in a JSON key. It is therefore not recommended to start or end a JSON key with these characters.
+  - Supported :heavy_check_mark: characters in JSON values:
+    - [A-Z] [a-z] [0-9] \` ~ ! @ # $ % € ^ & * ( ) - _ = + \ | : ; " ' . < > / ? \r \n \t \f \v `<U+0020>(Space)`
+	
+#### Please note that this crate does not check whether the output is valid JSON. The functionality of this crate is based on Regular Expressions and uses the [regex](https://crates.io/crates/regex) crate.
+
+### Changelog
+
+- See the [changelog](./CHANGELOG.md).
+
+### Contributing
+
+- All contributions are welcome. I will do my best to reply to all questions and PR's.
+- Please do note that all contributions made to this crate will be made available using the current license (MIT license).
 
 ### Third party licenses
 

@@ -18,8 +18,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    -
+    name: Install cargo-get
+    run: cargo install cargo-get
     - 
-      name: Publish to Crates.io
-      run: cargo publish --token ${CARGO_REGISTRY_TOKEN}
+      name: Publish to Crates.io if the local version is higher than the latest Crates.io version
+      run: crates_vers=$(curl https://raw.githubusercontent.com/rust-lang/crates.io-index/master/js/on/json_keyquotes_convert | jq -s | jq -r ".[-1].vers"); curr_vers=$(cargo get version); if [[ "$crates_vers" < "$curr_vers" ]]; then cargo publish --token ${CARGO_REGISTRY_TOKEN}; else echo "Version is already up-to-date."; fi
       env:
-        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }} 

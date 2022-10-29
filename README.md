@@ -79,6 +79,17 @@ let json_escaped = json_key_quote_utils::json_escape_ctrlchars(&json_added);
 	
 #### Please note that this crate does not check whether the output is valid JSON. The functionality of this crate is based on Regular Expressions and uses the [regex](https://crates.io/crates/regex) crate.
 
+### Data format
+
+#### Similar data-formats
+
+The JSON data-format as shown in the tests shares some similarities with both JSON5 and HJSON. Unfortunately, these data-formats differ enough that it can not be parsed by the JSON5 and HJSON parsers, which is why this crate was made.
+
+#### Usage
+
+The JSON data-format as shown in the tests is used by the following software:
+  - [VideoPsalm](https://myvideopsalm.weebly.com/)
+
 ### Changelog
 
 - See the [changelog](./CHANGELOG.md).
@@ -94,3 +105,6 @@ let json_escaped = json_key_quote_utils::json_escape_ctrlchars(&json_added);
 	Licensed under the MIT license, see [LICENSES.MIT](./external/licenses/LICENSES.MIT) for details.
 	The notice can be found at [Regex-NOTICE](./external/notices/Regex-NOTICE).
 	Website: <https://github.com/rust-lang/regex>.
+
+-  _**once_cell**_: Licensed under the MIT license, see [LICENSES.MIT](./external/licenses/LICENSES.MIT) for details.
+	Website: <https://github.com/matklad/once_cell>.

@@ -4,6 +4,7 @@
 
 use std::{path::Path};
 
+use once_cell::sync::Lazy;
 use regex::Regex;
 
 use crate::{load_write_utils, Quotes};
@@ -109,27 +110,27 @@ pub fn json_add_key_quotes(json: &str, quote_type: Quotes) -> String {
     
     // Add quotes around all string keys (single-quoted):
     // `/` == `\/` in Regex101
-    let single_quoted_string_val_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?'[\s\S]*?')"#)).unwrap();
+    let single_quoted_string_val_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?'[\s\S]*?')"#)).unwrap());
     let json_single_quoted_string_passed = single_quoted_string_val_regex.replace_all(json, "$prevchar_key".to_string() + quote_type.as_str() + "$key" + quote_type.as_str() + "$val");
 
     // Add quotes around all string keys (double-quoted):
     // `/` == `\/` in Regex101
-    let double_quoted_string_val_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?"[\s\S]*?")"#)).unwrap();
+    let double_quoted_string_val_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?"[\s\S]*?")"#)).unwrap());
     let json_double_quoted_string_passed = double_quoted_string_val_regex.replace_all(&json_single_quoted_string_passed, "$prevchar_key".to_string() + quote_type.as_str() + "$key" + quote_type.as_str() + "$val");
 
     // Add quotes around all object keys:
     // `/` == `\/` in Regex101
-    let object_val_regex = Regex::new(&(r#"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?[{\[])"#)).unwrap();
+    let object_val_regex = Lazy::new(|| Regex::new(&(r#"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>:\s*?[{\[])"#)).unwrap());
     let json_object_passed = object_val_regex.replace_all(&json_double_quoted_string_passed, quote_type.as_str().to_string() + "$key" + quote_type.as_str() + "$val");
 
     // Add quotes around all number keys:
     // `/` == `\/` in Regex101
-    let number_val_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>:\s*?[\d\-\.])"#)).unwrap();
+    let number_val_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>:\s*?[\d\-\.])"#)).unwrap());
     let json_number_passed = number_val_regex.replace_all(&json_object_passed, "$before".to_string() + quote_type.as_str() + "$key" + quote_type.as_str() + "$after");
 
     // Add quotes around all `null`, and `boolean` keys:
     // `/` == `\/` in Regex101
-    let null_bools_val_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>:\s*?(?:null|true|false))"#)).unwrap();
+    let null_bools_val_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>:\s*?(?:null|true|false))"#)).unwrap());
     let json_null_bools_passed = null_bools_val_regex.replace_all(&json_number_passed, "$before".to_string() + quote_type.as_str() + "$key" + quote_type.as_str() + "$after");
 
     return json_null_bools_passed.to_string();
@@ -156,12 +157,12 @@ pub fn json_remove_key_quotes(json: &str) -> String {
 
     // Remove the quotes from the keys (single-quoted):
     // `/` == `\/` in Regex101
-    let single_quotes_regex = Regex::new(&(r#"(?P<before>[{\[,][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?)'(?P<after>\s*?:)"#)).unwrap();
+    let single_quotes_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[{\[,][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?)'(?P<after>\s*?:)"#)).unwrap());
     let json_single_quotes_passed = single_quotes_regex.replace_all(json, "$before$key$after");
 
     // Remove the quotes from the keys (double-quoted):
     // `/` == `\/` in Regex101
-    let double_quotes_regex = Regex::new(&(r#"(?P<before>[{\[,][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?)"(?P<after>\s*?:)"#)).unwrap();
+    let double_quotes_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[{\[,][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?)"(?P<after>\s*?:)"#)).unwrap());
     let json_double_quotes_passed = double_quotes_regex.replace_all(&json_single_quotes_passed, "$before$key$after");
 
     return json_double_quotes_passed.to_string();
@@ -200,7 +201,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
 
     for _n in 0..2 {
         // For all single-quoted string keys with single-quoted values:
-        let singlequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap();
+        let singlequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap());
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -208,7 +209,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted string keys with single-quoted values:
-        let singlequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap();
+        let singlequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap());
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -216,7 +217,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted string keys with double-quoted values:
-        let doublequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap();
+        let doublequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap());
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -224,7 +225,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted string keys with double-quoted values:
-        let doublequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap();
+        let doublequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap());
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -233,7 +234,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted object keys:
-        let object_key_regex = Regex::new(&(r#"'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?[{\[])"#)).unwrap();
+        let object_key_regex = Lazy::new(|| Regex::new(&(r#"'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<val>\s*?:\s*?[{\[])"#)).unwrap());
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -241,7 +242,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted object keys:
-        let object_key_regex = Regex::new(&(r#""(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?[{\[])"#)).unwrap();
+        let object_key_regex = Lazy::new(|| Regex::new(&(r#""(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<val>\s*?:\s*?[{\[])"#)).unwrap());
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -249,7 +250,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted number keys:
-        let number_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap();
+        let number_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap());
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -257,7 +258,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted number keys:
-        let number_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap();
+        let number_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap());
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -265,7 +266,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted null and boolean keys:
-        let null_boolean_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap();
+        let null_boolean_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)'(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])'(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap());
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -273,7 +274,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted null and boolean keys:
-        let null_boolean_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap();
+        let null_boolean_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])"(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap());
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", "\\n"), 1);
@@ -281,14 +282,14 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted string values:
-        let singlequoted_string_value_regex = Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap();
+        let singlequoted_string_value_regex = Lazy::new(|| Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap());
         for cap in singlequoted_string_value_regex.captures_iter(&new_json.clone()) {
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\n", "\\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\t", "\\t"), 1);
         }
 
         // For all double-quoted string values:
-        let doublequoted_string_value_regex = Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap();
+        let doublequoted_string_value_regex = Lazy::new(|| Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap());
         for cap in doublequoted_string_value_regex.captures_iter(&new_json.clone()) {
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\n", "\\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\t", "\\t"), 1);
@@ -334,7 +335,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
     for _n in 0..2 {
 
         // For all single-quoted string keys:
-        let singlequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap();
+        let singlequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?'[\s\S]*?')"#)).unwrap());
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", "\n"), 1);
@@ -342,7 +343,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         }
 
         // For all double-quoted string keys:
-        let doublequoted_string_key_regex = Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap();
+        let doublequoted_string_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<prevchar_key>[^"'][\s]*)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?"[\s\S]*?")"#)).unwrap());
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", "\n"), 1);
@@ -350,7 +351,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         }
 
         // For all object keys:
-        let object_key_regex = Regex::new(&(r#"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?[{\[])"#)).unwrap();
+        let object_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<val>\s*?:\s*?[{\[])"#)).unwrap());
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", "\n"), 1);
@@ -358,7 +359,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         }
 
         // For all number keys:
-        let number_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap();
+        let number_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>\s*?:\s*?[\d\-\.])"#)).unwrap());
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", "\n"), 1);
@@ -366,7 +367,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         }
 
         // For all null and boolean keys:
-        let null_boolean_key_regex = Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap();
+        let null_boolean_key_regex = Lazy::new(|| Regex::new(&(r#"(?P<before>[\[,{]\s*?)(?P<key>["#.to_string() + SUPPORTED_KEY_CHARS_REGEX_STR + r#"]*?[^"'])(?P<after>\s*?:\s*?(?:null|true|false))"#)).unwrap());
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", "\n"), 1);
@@ -374,14 +375,14 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         }
 
         // For all single-quoted string values:
-        let singlequoted_string_value_regex = Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap();
+        let singlequoted_string_value_regex = Lazy::new(|| Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap());
         for cap in singlequoted_string_value_regex.captures_iter(&new_json.clone()) {
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\n", "\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\t", "\t"), 1);
         }
 
         // For all double-quoted string values:
-        let doublequoted_string_value_regex = Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap();
+        let doublequoted_string_value_regex = Lazy::new(|| Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap());
         for cap in doublequoted_string_value_regex.captures_iter(&new_json.clone()) {
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\n", "\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\t", "\t"), 1);

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Nothing yet.
 
+## [0.2.1] - 2022-10-29
+### Fixed
+- Fixed broken repository link in `Cargo.toml`.
+
+### Added
+- Improved performance by using `once_cell` to ensure that the regular expressions only get compiled once.
+- Added a section in the `README.md` for where the JSON data-format is used to increase discoverability.
+
 ## [0.2.0] - 2022-10-28
 ### Added
 - Added documentation to [docs.rs](https://docs.rs/json_keyquotes_convert).

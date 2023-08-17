@@ -20,7 +20,7 @@ cargo add json_keyquotes_convert
 use json_keyquotes_convert::{JsonKeyQuoteConverter, Quotes};
 
 let json = JsonKeyQuoteConverter::new("{key: \"va\nl\"}", Quotes::default())
-	.add_key_quotes().json_escape_ctrlchars().json();
+	.add_key_quotes().escape_ctrlchars().json();
 
 // JSON string will now be: {\"key\": \"va\\nl\"}
 // Raw JSON will now be: {"key": "va\nl"}
@@ -57,14 +57,6 @@ let json_escaped = json_key_quote_utils::json_escape_ctrlchars(&json_added);
   - Supported quotes around JSON string values:
 	- Double-quotes: :heavy_check_mark:
 	- Single-quotes: :heavy_check_mark:
-  - Supports control character escaping in JSON keys:
-	- Newline (\n): :heavy_check_mark: :white_check_mark:
-	- Tab (\t): :heavy_check_mark: :white_check_mark:
-	- Note: These characters could be misinterpreted as not belonging to the key. It is therefore not recommended to start or end a JSON key with these characters.
-  - Supports control character unescaping in JSON keys:
-	- Newline (\n): :heavy_check_mark: :white_check_mark:
-	- Tab (\t): :heavy_check_mark: :white_check_mark:
-	- Note: These characters could be misinterpreted as not belonging to the key. It is therefore not recommended to start or end a JSON key with these characters.
   - Supports control character escaping in JSON string values:
 	- Newline (\n): :heavy_check_mark: :white_check_mark:
 	- Tab (\t): :heavy_check_mark: :white_check_mark:

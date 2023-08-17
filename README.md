@@ -60,9 +60,11 @@ let json_escaped = json_key_quote_utils::json_escape_ctrlchars(&json_added);
   - Supports control character escaping in JSON string values:
 	- Newline (\n): :heavy_check_mark: :white_check_mark:
 	- Tab (\t): :heavy_check_mark: :white_check_mark:
+	- Carriage return (\r): :heavy_check_mark: :white_check_mark:
   - Supports control character unescaping in JSON string values:
 	- Newline (\n): :heavy_check_mark: :white_check_mark:
 	- Tab (\t): :heavy_check_mark: :white_check_mark:
+	- Carriage return (\r): :heavy_check_mark: :white_check_mark:
   - Supported :heavy_check_mark: characters in JSON keys:
 	- [A-Z] [a-z] [0-9] \` ~ ! @ # $ % € ^ & * ( ) - _ = + \ | ; " ' . < > / ? \r \n \t \f \v `<U+0020>(Space)`
 	- Note: ' and " and their escaped variants could be misinterpreted as keyquotes when used as the last character in a JSON key. It is therefore not recommended to start or end a JSON key with these characters.

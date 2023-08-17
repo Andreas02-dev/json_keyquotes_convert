@@ -270,6 +270,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -286,6 +287,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -302,6 +304,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -318,6 +321,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
             new_json =
@@ -336,6 +340,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -352,6 +357,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -368,6 +374,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -384,6 +391,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -400,6 +408,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -416,6 +425,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
             new_json = new_json.replacen(cap_match, &cap_match.replace("\n", ""), 1);
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\r", ""), 1);
             new_json =
                 new_json.replacen(cap_match, &cap_match.replace("\t", "").replace("\t", ""), 1);
         }
@@ -424,6 +434,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         let singlequoted_string_value_regex =
             Lazy::new(|| Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap());
         for cap in singlequoted_string_value_regex.captures_iter(&new_json.clone()) {
+            new_json = new_json.replacen(&cap[1], &cap[1].replace("\r", "\\r"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\n", "\\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\t", "\\t"), 1);
         }
@@ -432,6 +443,7 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
         let doublequoted_string_value_regex =
             Lazy::new(|| Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap());
         for cap in doublequoted_string_value_regex.captures_iter(&new_json.clone()) {
+            new_json = new_json.replacen(&cap[1], &cap[1].replace("\r", "\\r"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\n", "\\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\t", "\\t"), 1);
         }
@@ -443,8 +455,8 @@ pub fn json_escape_ctrlchars(json: &str) -> String {
 /// Unescape ctrl-characters from the JSON string values
 /// and remove ctrl-characters from the JSON keys without keyquotes.
 ///
-/// This method will unescape `newlines` and `tabs` in the JSON string values
-/// and remove `newlines` and `tabs` in the JSON keys without keyquotes.
+/// This method will unescape `newlines`, `tabs` and `carriage returns` in the JSON string values
+/// and remove `newlines`, `tabs` and `carriage returns` in the JSON keys without keyquotes.
 ///
 /// # Arguments
 ///
@@ -482,6 +494,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         });
         for cap in singlequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\\r", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\t", ""), 1);
         }
@@ -497,6 +510,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         });
         for cap in doublequoted_string_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\\r", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\t", ""), 1);
         }
@@ -512,6 +526,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         });
         for cap in object_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\\r", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\t", ""), 1);
         }
@@ -527,6 +542,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         });
         for cap in number_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\\r", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\t", ""), 1);
         }
@@ -542,6 +558,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         });
         for cap in null_boolean_key_regex.captures_iter(&new_json.clone()) {
             let cap_match = cap.name("key").unwrap().as_str();
+            new_json = new_json.replacen(cap_match, &cap_match.replace("\\r", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\n", ""), 1);
             new_json = new_json.replacen(cap_match, &cap_match.replace("\\t", ""), 1);
         }
@@ -550,6 +567,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         let singlequoted_string_value_regex =
             Lazy::new(|| Regex::new(r#":[\s]*?'((?:[^'\\]|\\.)*)'"#).unwrap());
         for cap in singlequoted_string_value_regex.captures_iter(&new_json.clone()) {
+            new_json = new_json.replacen(&cap[1], &cap[1].replace("\\r", "\r"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\n", "\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\t", "\t"), 1);
         }
@@ -558,6 +576,7 @@ pub fn json_unescape_ctrlchars(json: &str) -> String {
         let doublequoted_string_value_regex =
             Lazy::new(|| Regex::new(r#":[\s]*?"((?:[^"\\]|\\.)*)""#).unwrap());
         for cap in doublequoted_string_value_regex.captures_iter(&new_json.clone()) {
+            new_json = new_json.replacen(&cap[1], &cap[1].replace("\\r", "\r"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\n", "\n"), 1);
             new_json = new_json.replacen(&cap[1], &cap[1].replace("\\t", "\t"), 1);
         }

@@ -107,10 +107,10 @@ impl JsonKeyQuoteConverter {
     }
 
     /// Escape ctrl-characters from the JSON string values
-    /// and the JSON keys with keyquotes.
+    /// and remove ctrl-characters from the JSON keys with keyquotes.
     ///
     /// This method will escape `newlines` and `tabs` in the JSON string values
-    /// and in the JSON keys with keyquotes.
+    /// and remove `newlines` and `tabs` in the JSON keys with keyquotes.
     ///
     /// # Examples
     ///
@@ -133,10 +133,10 @@ impl JsonKeyQuoteConverter {
     }
 
     /// Unescape ctrl-characters from the JSON string values
-    /// and the JSON keys without keyquotes.
+    /// and remove ctrl-characters from the JSON keys without keyquotes.
     ///
-    /// This method will unescape `newlines` and `tabs` in the JSON string values
-    /// and in the JSON keys without keyquotes.
+    /// This method will unescape `newlines`, `tabs` and `carriage returns` in the JSON string values
+    /// and remove `newlines`, `tabs` and `carriage returns` in the JSON keys without keyquotes.
     ///
     /// # Examples
     ///

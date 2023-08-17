@@ -1,7 +1,7 @@
 [package]
 name = "json_keyquotes_convert"
 description = "A Rust library crate to convert JSON from and to JSON without key-quotes."
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT"
 repository = "https://https://github.com/Andreas02-dev/json_keyquotes_convert_rs/"

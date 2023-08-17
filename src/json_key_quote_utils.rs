@@ -231,8 +231,8 @@ pub fn json_remove_key_quotes(json: &str) -> String {
 /// Escape ctrl-characters from the JSON string values
 /// and remove ctrl-characters from the JSON keys with keyquotes.
 ///
-/// This method will escape `newlines` and `tabs` in the JSON string values
-/// and remove `newlines` and `tabs` in the JSON keys with keyquotes.
+/// This method will escape `newlines`, `tabs` and `carriage returns` in the JSON string values
+/// and remove `newlines`, `tabs` and `carriage returns` in the JSON keys with keyquotes.
 ///
 /// # Arguments
 ///
